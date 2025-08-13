@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Ainaa! 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        /* CSS umum untuk seluruh halaman */
+       body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: url('Asset/Pink Floral Linktree Background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ff3198;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            max-width: min(800px, 90vw);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* --- Gaya Baru untuk Hati Shimmer --- */
+        .heart {
+            position: relative;
+            width: 120px;
+            height: 100px;
+            cursor: pointer;
+            animation: pulse 1.5s ease infinite, zoomin 1.5s ease forwards;
+        }
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 60px;
+            height: 100px;
+            border-radius: 60px 60px 0 0;
+            background: linear-gradient(45deg, #ff6b8b, #ffc0cb, #ff6b8b);
+            background-size: 200% auto;
+            animation: shimmer-heart 2.5s ease infinite;
+        }
+        .heart::before {
+            left: 60px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+        /* --- Akhir Gaya Hati Shimmer --- */
+
+        /* Gaya untuk judul dan teks */
+        h1 {
+            font-size: 3em;
+            font-family: 'Trebuchet MS', sans-serif;
+            animation: popin 1.5s ease-in-out, shimmer 3s infinite;
+            background: linear-gradient(90deg, #ff69b4, #ffc0cb, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+        }
+
+        /* Gaya untuk tombol */
+        button {
+            background-color: #ff99cc;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #ff66a3;
+            transform: scale(1.05);
+        }
+
+        /* Gaya untuk kuis dan opsi jawaban */
+        #quizSection {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            height: auto;
+            margin-top: 20px;
+            width: 100%;
+            opacity: 0; /* Awalnya opacity 0 untuk transisi */
+            transition: opacity 1s ease-in-out;
+        }
+        .options button {
+            margin: 10px;
+            background-color: #ffb3d9;
+            font-size: 1em;
+            width: 100%;
+        }
+        .options button.correct {
+            background-color: #8bc34a !important;
+            color: white;
+        }
+        .options button.incorrect {
+            background-color: #f44336 !important;
+            color: white;
+        }
+
+        /* Gaya untuk kotak pesan akhir */
+        #messageBox {
+            padding: 1.5rem;
+            margin: 2rem auto;
+            border-radius: 20px;
+            width: 90%;
+            max-width: min(700px, 90vw);
+            color: #444;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: justify;
+            background: #fff;
+            font-family: 'Poppins', sans-serif;
+            white-space: pre-line;
+            text-align: left;
+            opacity: 0; /* Awalnya opacity 0 untuk transisi */
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Animasi */
+        @keyframes popin {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes shimmer-heart {
+            0% { background-position: 200% center; }
+            100% { background-position: 0% center; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.95); }
+        }
+        @keyframes zoomin {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes explode {
+            0% {
+                transform: scale(0.1) translate(-50%, -50%);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2) translate(calc(var(--random-x) * 2px), calc(var(--random-y) * 2px));
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1) translate(calc(var(--random-x) * 100px), calc(var(--random-y) * 100px));
+                opacity: 0;
+            }
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Transisi saat amplop diklik */
+        #loveTransition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 182, 193, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .love-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff1493;
+            animation: explode 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div id="welcomeScreen">
+        <div class="content-wrapper">
+            <h1 class="text-5xl font-bold">Hai Ainaa! 🎀</h1>
+            <p class="text-lg font-regular mb-24">Tekan Hatinya manis😘</p>
+            <div class="heart" id="envelope"></div>
+        </div>
+    </div>
+
+    <div id="loveTransition" style="display: none;"></div>
+
+    <div id="mainContent" style="display: none;">
+        <div class="content-wrapper">
+            <h1 id="mainHeader" class="text-5xl font-bold">Hai Ainaa comellll! ✨</h1>
+            <p id="greetingText" class="text-lg font-regular mb-10">Kabar kamu gimana hari ini? 😊</p>
+
+            <div id="quizSection">
+                <h3 id="quizTitle" class="text-2xl font-semibold" style="display:none;"></h3>
+                <p id="questionText" class="text-lg font-regular my-4" style="display:none;"></p>
+                <div class="options py-4 px-6"></div>
+                <p id="feedback"></p>
+                <button id="nextButton" style="display:none;">Lanjut ke Pertanyaan Selanjutnya 💘</button>
+            </div>
+
+            <button class="bg-pink-300 text-white py-3 px-4 rounded-3xl" id="startQuizButton">Aku baik, lanjut yuk! 💕</button>
+
+            <div id="messageBox" style="display: none;">
+                <h1 style="text-align: center; font-family: 'Pacifico', cursive;">🎉 Happy Birthday, Ainaa 🎉</h1>
+                <div id="messageText"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="birthdaySong" loop>
+        <source src="Asset/Bunga Citra Lestari - Pernah Muda Official Music Video (192 KBps).mp3" type="audio/mpeg">
+        Browser kamu tidak mendukung pemutaran audio.
+    </audio>
+    
+    <audio id="popSound">
+        <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
+    </audio>
+
+<script>
+    const questions = [
+      {
+        question: "Siapa di antara berikut ini yang paling penyabar dan penyayang tapi menyebalkan?",
+        options: ["Ole", "Nathan", "Daniel Cesar"],
+        correctIndex: 1
+      },
+      {
+        question: "Siapa yang paling sering bikin kamu senyum-senyum sendiri?",
+        options: ["Nathan", "tetangga🐒", "Mie Ayam"],
+        correctIndex: 0
+      },
+      {
+        question: "Siapa yang selalu bilang ‘semangat terus yaaa’ tiap kamu lelah?",
+        options: ["Arul Munyenyo", "Nathan", "Spotify"],
+        correctIndex: 1
+      }
+    ];
+
+    let currentQuestion = 0;
+    const mainContent = document.getElementById("mainContent");
+    const mainHeader = document.getElementById("mainHeader");
+    const quizSection = document.getElementById("quizSection");
+    const quizTitle = document.getElementById("quizTitle");
+    const questionText = document.getElementById("questionText");
+    const optionsContainer = document.querySelector(".options");
+    const feedback = document.getElementById("feedback");
+    const nextButton = document.getElementById("nextButton");
+    const startQuizButton = document.getElementById("startQuizButton");
+    const messageBox = document.getElementById("messageBox");
+    const messageTextContainer = document.getElementById("messageText");
+    const greetingText = document.getElementById("greetingText");
+    const birthdaySong = document.getElementById("birthdaySong");
+
+    function askQuestion() {
+      // Fade out header dan greetingText
+      mainHeader.style.opacity = 0;
+      greetingText.style.opacity = 0;
+      startQuizButton.style.opacity = 0;
+
+      setTimeout(() => {
+        mainHeader.style.display = "none";
+        greetingText.style.display = "none";
+        startQuizButton.style.display = "none";
+
+        quizSection.style.display = "flex";
+        setTimeout(() => {
+          quizSection.style.opacity = 1;
+        }, 50); // Delay kecil untuk transisi
+        showQuestion();
+      }, 500); // Tunggu sampai fade out selesai
+    }
+
+    function showQuestion() {
+      if (currentQuestion >= questions.length) {
+        showMessage();
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      quizTitle.innerText = `Teka-Teki Cinta 💕 (${currentQuestion + 1}/${questions.length})`;
+      questionText.innerHTML = `<strong>${q.question}</strong>`;
+      
+      quizTitle.style.display = "block";
+      questionText.style.display = "block";
+      optionsContainer.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.style.width = "100%";
+        btn.style.padding = "10px 15px";
+        btn.onclick = () => checkAnswer(btn, idx === q.correctIndex);
+        optionsContainer.appendChild(btn);
+      });
+
+      feedback.innerText = "";
+      nextButton.style.display = "none";
+    }
+
+    function checkAnswer(button, isCorrect) {
+      const buttons = document.querySelectorAll(".options button");
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (isCorrect) {
+        button.classList.add("correct");
+        feedback.innerText = "hahahahaa, Tau aja manisss, wleeee😏😍";
+        nextButton.innerText = (currentQuestion === questions.length - 1)
+          ? "Lihat Pesan Spesial 💌"
+          : "Lanjut ke Pertanyaan Selanjutnya 💘";
+        nextButton.style.display = "inline-block";
+      } else {
+        button.classList.add("incorrect");
+        feedback.innerText = "hhhmmmmmmmmmmmmmmmmmmmmmmmmmm 🥺";
+        setTimeout(() => {
+          buttons.forEach(btn => {
+            btn.disabled = false;
+            btn.classList.remove("incorrect");
+          });
+          feedback.innerText = "";
+        }, 1500);
+      }
+    }
+
+    function showNextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        // Fade out quizSection sebelum menampilkan pesan
+        quizSection.style.opacity = 0;
+        setTimeout(() => {
+          quizSection.style.display = "none";
+          confetti({
+            particleCount: 200,
+            spread: 150,
+            origin: { y: 0.6 }
+          });
+          messageBox.style.display = "block";
+          setTimeout(() => {
+            messageBox.style.opacity = 1;
+            typeWriterMessage();
+          }, 50); // Delay kecil untuk transisi
+        }, 500);
+      }
+    }
+
+    function typeWriterMessage() {
+      const text = `
+🎉 Happy Birthday, Ainaa 🎉
+
+Barakallahu Fii Umrik, comellllll!!
+Cantik, Manis, Sholehah, Jago masak, Rajin, Istri Idaman, Perhatian, Peduli, Rajin Menabung, Masyaallah. 🌸
+
+Semoga di umur aina yang baru, semua harapannya terkabul, langkahnya selalu dimudahkan, dan diberi kesehatan selalu,
+kebahagiaan, serta kekuatan buat jadi Apoteker yang sukses dan disenangi banyak orang. 💖
+
+Proud of You Honeeyyy, abg percaya kamu bisa lewatin semua hal, walau kadang kamu ngeluh capek, sedih, dan jenuh.
+Tapi ingat ya, kamu gak pernah sendirian — abg selalu di sini, comellll.
+Insyaa Allah bakal temani kamu terus, sampai nanti kita wujudin semua mimpi kita. Sama-sama kita hadapi semua badainya ya manissss ✨
+
+Sehat-sehat Manissss🥰
+
+- Love you, selalu. 💌
+      `;
+      messageTextContainer.textContent = "";
+      let i = 0;
+      function typeChar() {
+        if (i < text.length) {
+          messageTextContainer.textContent += text.charAt(i);
+          i++;
+          setTimeout(typeChar, 30);
+        }
+      }
+      typeChar();
+    }
+    
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.innerHTML = "💖";
+      heart.style.position = "fixed";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = "-20px";
+      heart.style.fontSize = Math.random() * 20 + 20 + "px";
+      heart.style.opacity = Math.random();
+      heart.style.animation = "fall 5s linear forwards";
+      document.body.appendChild(heart);
+      
+      setTimeout(() => {
+        heart.remove();
+      }, 5000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Fade in mainContent setelah transisi
+      mainContent.style.opacity = 0;
+      mainContent.style.transition = "opacity 1s ease-in-out";
+
+      document.getElementById("envelope").addEventListener("click", () => {
+        const transition = document.getElementById("loveTransition");
+        transition.style.display = "flex";
+        const colors = ['#ff1493', '#ff69b4', '#ff00a4', '#ff0080'];
+        const heartCount = Math.min(300, window.innerWidth * window.innerHeight / 500);
+        for (let i = 0; i < heartCount; i++) {
+            setTimeout(() => {
+                const heart = document.createElement("div");
+                heart.className = "love-icon";
+                heart.innerHTML = "💖";
+                heart.style.left = "50%";
+                heart.style.top = "50%";
+                heart.style.fontSize = `${Math.min(Math.random() * 30 + 20, 8 + window.innerWidth/50)}px`;
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                heart.style.setProperty('--random-x', (Math.random() - 0.5) * (window.innerWidth/100));
+                heart.style.setProperty('--random-y', (Math.random() - 0.5) * (window.innerHeight/100));
+                transition.appendChild(heart);
+            }, i * 10);
+        }
+
+        transition.style.opacity = 1;
+        const popSound = document.getElementById("popSound");
+        popSound.play();
+
+        setTimeout(() => {
+          document.getElementById("welcomeScreen").style.display = "none";
+          transition.style.display = "none";
+          mainContent.style.display = "flex";
+          setTimeout(() => {
+            mainContent.style.opacity = 1;
+          }, 50); // Delay kecil untuk transisi
+          
+          birthdaySong.play();
+          setInterval(createHeart, 500);
+        }, 2000);
+      });
+      startQuizButton.addEventListener("click", askQuestion);
+      nextButton.addEventListener("click", showNextQuestion);
+    });
+</script>
+</body>
+</html>
